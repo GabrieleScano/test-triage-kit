@@ -1,0 +1,147 @@
+{
+  "config": { "version": "1.48.0" },
+  "suites": [
+    {
+      "title": "login.spec.ts",
+      "file": "login.spec.ts",
+      "specs": [
+        {
+          "title": "shows an error for locked out user",
+          "file": "login.spec.ts",
+          "tests": [
+            {
+              "projectName": "chromium",
+              "status": "unexpected",
+              "results": [
+                {
+                  "status": "failed",
+                  "duration": 5230,
+                  "retry": 0,
+                  "startTime": "2026-07-06T21:14:03.120Z",
+                  "error": {
+                    "message": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('[data-test=\"error-banner\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n  - expect.toBeVisible with timeout 5000ms\n  - waiting for locator('[data-test=\"error-banner\"]')",
+                    "stack": "Error: expect(locator).toBeVisible() failed\n    at /home/runner/work/e2e/tests/e2e/login.spec.ts:42:58"
+                  },
+                  "steps": [
+                    { "title": "open login page" },
+                    { "title": "submit locked_out_user credentials" },
+                    { "title": "verify error banner" }
+                  ],
+                  "attachments": [
+                    { "name": "screenshot", "contentType": "image/png", "path": "test-results/login-locked-out/test-failed-1.png" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "clears the error when dismissed",
+          "file": "login.spec.ts",
+          "tests": [
+            {
+              "projectName": "firefox",
+              "status": "unexpected",
+              "results": [
+                {
+                  "status": "failed",
+                  "duration": 5198,
+                  "retry": 0,
+                  "startTime": "2026-07-06T21:14:09.870Z",
+                  "error": {
+                    "message": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('[data-test=\"error-banner\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n  - expect.toBeVisible with timeout 5000ms\n  - waiting for locator('[data-test=\"error-banner\"]')",
+                    "stack": "Error: expect(locator).toBeVisible() failed\n    at /home/runner/work/e2e/tests/e2e/login.spec.ts:57:58"
+                  },
+                  "steps": [
+                    { "title": "open login page" },
+                    { "title": "submit locked_out_user credentials" },
+                    { "title": "dismiss the error banner" }
+                  ],
+                  "attachments": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "suites": []
+    },
+    {
+      "title": "checkout.spec.ts",
+      "file": "checkout.spec.ts",
+      "specs": [
+        {
+          "title": "completes a purchase end to end",
+          "file": "checkout.spec.ts",
+          "tests": [
+            {
+              "projectName": "chromium",
+              "status": "unexpected",
+              "results": [
+                {
+                  "status": "timedOut",
+                  "duration": 30000,
+                  "retry": 0,
+                  "startTime": "2026-07-06T21:15:22.001Z",
+                  "error": {
+                    "message": "Test timeout of 30000ms exceeded.\n\nError: page.waitForURL: Test timeout of 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/checkout-complete.html\" until \"load\"\n============================================================",
+                    "stack": "Error: page.waitForURL: Test timeout of 30000ms exceeded.\n    at /home/runner/work/e2e/tests/e2e/checkout.spec.ts:31:16"
+                  },
+                  "steps": [
+                    { "title": "add two items to the cart" },
+                    { "title": "fill shipping information" },
+                    { "title": "confirm the order" }
+                  ],
+                  "attachments": [
+                    { "name": "trace", "contentType": "application/zip", "path": "test-results/checkout/trace.zip" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "shows the cart badge after adding an item",
+          "file": "checkout.spec.ts",
+          "tests": [
+            {
+              "projectName": "webkit",
+              "status": "flaky",
+              "results": [
+                {
+                  "status": "failed",
+                  "duration": 4102,
+                  "retry": 0,
+                  "startTime": "2026-07-06T21:16:02.310Z",
+                  "error": {
+                    "message": "Error: expect(locator).toHaveText(expected) failed\n\nLocator: locator('.shopping_cart_badge')\nExpected string: \"1\"\nReceived string: \"\"",
+                    "stack": "Error: expect(locator).toHaveText(expected) failed\n    at /home/runner/work/e2e/tests/e2e/checkout.spec.ts:12:47"
+                  },
+                  "steps": [{ "title": "add one item to the cart" }],
+                  "attachments": []
+                },
+                {
+                  "status": "passed",
+                  "duration": 1876,
+                  "retry": 1,
+                  "startTime": "2026-07-06T21:16:08.114Z",
+                  "steps": [{ "title": "add one item to the cart" }],
+                  "attachments": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "suites": []
+    }
+  ],
+  "stats": {
+    "startTime": "2026-07-06T21:14:00.000Z",
+    "expected": 21,
+    "unexpected": 3,
+    "flaky": 1,
+    "skipped": 1,
+    "duration": 184000
+  }
+}
