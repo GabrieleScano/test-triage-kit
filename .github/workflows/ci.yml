@@ -23,3 +23,41 @@ jobs:
         with:
           name: triage-demo-output
           path: triage-output/
+
+  # Publish the demo triage report (fixture data, deterministic pipeline) to
+  # GitHub Pages so the HTML output can be linked as a live example.
+  deploy-demo:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run demo
+      - name: Stage Pages site
+        run: |
+          mkdir -p site
+          cp triage-output/triage.html site/index.html
+          cp triage-output/*.md site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

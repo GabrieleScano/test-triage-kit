@@ -4,6 +4,8 @@ Failure-triage toolkit for **Playwright**: it turns raw test failures into dedup
 
 [![CI](https://github.com/GabrieleScano/test-triage-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/GabrieleScano/test-triage-kit/actions/workflows/ci.yml)
 
+**[See a live triage report →](https://gabrielescano.github.io/test-triage-kit/)** — the deterministic pipeline run on the bundled fixture (clustered bugs, a flaky test, stated verdicts), rebuilt and published by CI on every push.
+
 ## Why this project
 
 Auto-filing a bug for every red test produces noise, not triage. The real problems are the ones a single failing test can't answer:
