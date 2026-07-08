@@ -85,3 +85,5 @@ Without an API key everything still works; reports are simply built from the det
 ## Related projects
 
 Part of a QA engineering portfolio covering the full cycle: [requirements-analyzer](https://github.com/GabrieleScano/requirements-analyzer) (shift-left requirements review) → [ai-augmented-e2e](https://github.com/GabrieleScano/ai-augmented-e2e) (test design & execution) → **test-triage-kit** (failure triage).
+
+The kit is wired into `ai-augmented-e2e`'s CI as a live integration: its Playwright config loads `test-triage-kit/reporter`, and every workflow run triages the failures and uploads the verdicts as a build artifact.
