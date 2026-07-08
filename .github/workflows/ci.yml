@@ -49,11 +49,14 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run demo
+      - run: npm run demo:enriched
       - name: Stage Pages site
         run: |
-          mkdir -p site
-          cp triage-output/triage.html site/index.html
-          cp triage-output/*.md site/
+          mkdir -p site/deterministic
+          cp triage-output-enriched/triage.html site/index.html
+          cp triage-output-enriched/*.md site/
+          cp triage-output/triage.html site/deterministic/index.html
+          cp triage-output/*.md site/deterministic/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

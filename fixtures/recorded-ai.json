@@ -1,0 +1,44 @@
+{
+  "note": "Recorded AI responses for the bundled sample report, keyed by cluster fingerprint. Used by scripts/demo-enriched.ts to build the published demo deterministically, without an API key. Each entry is validated by the same parser that guards live model output.",
+  "clusters": {
+    "5d16ee3b2eb80cbb": {
+      "title": "Locked-out user gets no error message on login",
+      "rootCauseHypothesis": "The error banner ([data-test=\"error-banner\"]) is no longer rendered on failed login — most plausibly removed or renamed in a recent UI change, since the failure is stable across Chromium and Firefox and both affected tests wait for the same element.",
+      "severity": "high",
+      "severityRationale": "A locked-out user receives no feedback at all and cannot tell why login failed; the failure is deterministic and browser-independent.",
+      "reproSteps": [
+        "Open the login page",
+        "Sign in with a locked-out user's credentials",
+        "Observe that the page stays on the login form with no error message shown"
+      ]
+    },
+    "b741a04ad3aba6fd": {
+      "title": "Checkout never reaches the confirmation page after placing an order",
+      "rootCauseHypothesis": "Confirming the order does not navigate to checkout-complete.html. Because the test waits on the URL rather than a fixed delay, the redirect after order submission is likely broken, not slow — a regression in the order-confirmation step.",
+      "severity": "critical",
+      "severityRationale": "The purchase flow cannot be completed end to end; this is the primary revenue path.",
+      "reproSteps": [
+        "Add two items to the cart",
+        "Proceed to checkout and fill in the shipping information",
+        "Confirm the order",
+        "Observe that the order-confirmation page never loads"
+      ]
+    },
+    "c042707e51d2696e": {
+      "title": "Cart badge is intermittently empty right after adding an item (WebKit)",
+      "rootCauseHypothesis": "A race between the add-to-cart state update and the badge render: the assertion reads the badge before the counter updates. It passed on retry and only appears on WebKit, which points to test timing rather than an application defect.",
+      "severity": "low",
+      "severityRationale": "No user-facing defect confirmed; the cost is CI noise and retry time until the test waits on the state change explicitly.",
+      "reproSteps": [
+        "Add one item to the cart",
+        "Read the cart badge immediately afterwards",
+        "Occasionally the badge has not been updated yet when it is read"
+      ]
+    }
+  },
+  "synthesis": {
+    "summary": "Two real regressions and one flaky test — not a systemic outage. Failed login gives the user no feedback (stable on Chromium and Firefox), and checkout never reaches order confirmation. The cart-badge failure passed on retry and looks like test timing on WebKit.",
+    "systemicIssue": false,
+    "recommendation": "Fix the checkout confirmation redirect first — it blocks the purchase flow — then restore the login error banner; give the cart-badge test an explicit wait on the cart state instead of retrying."
+  }
+}

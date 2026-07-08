@@ -4,7 +4,7 @@ Failure-triage toolkit for **Playwright**: it turns raw test failures into dedup
 
 [![CI](https://github.com/GabrieleScano/test-triage-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/GabrieleScano/test-triage-kit/actions/workflows/ci.yml)
 
-**[See a live triage report →](https://gabrielescano.github.io/test-triage-kit/)** — the deterministic pipeline run on the bundled fixture (clustered bugs, a flaky test, stated verdicts), rebuilt and published by CI on every push.
+**[See a live triage report →](https://gabrielescano.github.io/test-triage-kit/)** — the pipeline run on the bundled fixture: clustered bugs, a flaky test, stated verdicts, and the AI-written bug reports (human title, root-cause hypothesis, severity, repro steps). The model responses are [recorded](fixtures/recorded-ai.json) and validated by the real parser, so CI rebuilds the page deterministically without an API key; the [deterministic-only output](https://gabrielescano.github.io/test-triage-kit/deterministic/) is published alongside for comparison.
 
 ## Why this project
 

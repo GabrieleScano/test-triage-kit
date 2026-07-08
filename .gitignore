@@ -1,5 +1,6 @@
 node_modules/
 dist/
 triage-output/
+triage-output-enriched/
 .env
 .DS_Store
