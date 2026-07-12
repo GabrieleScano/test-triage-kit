@@ -9,6 +9,7 @@ import { runTriage } from './pipeline.js';
 import { clusterMarkdown, runSummaryMarkdown, reportFileName } from './output/markdown.js';
 import { triageHtml } from './output/html.js';
 import { githubConfigFromEnv, syncIssues } from './output/github.js';
+import { jiraConfigFromEnv, syncJiraIssues } from './output/jira.js';
 import { notifySlack } from './output/notify.js';
 
 const USAGE = `Usage: triage <report.json> [options]
@@ -22,7 +23,9 @@ Options:
                       (default: <out>/history.json)
   --no-ai             Skip AI enrichment even if an API key is configured
   --github            Sync GitHub issues (needs GITHUB_TOKEN + GITHUB_REPOSITORY)
-  --dry-run           With --github: log actions instead of performing them
+  --jira              Sync Jira issues (needs JIRA_BASE_URL + JIRA_EMAIL +
+                      JIRA_API_TOKEN + JIRA_PROJECT_KEY)
+  --dry-run           With --github/--jira: log actions instead of performing them
   --slack             Post a digest to SLACK_WEBHOOK_URL
 `;
 
@@ -88,6 +91,19 @@ async function main(): Promise<number> {
     const outcome = await syncIssues(config, result.reports, result.stats.runId, preUpdateResolved);
     console.log(
       `GitHub: ${outcome.created.length} issue(s) created, ${outcome.commented.length} commented, ` +
+        `${outcome.closeProposed.length} close proposal(s), ${outcome.skipped.length} skipped (flaky/infra).`,
+    );
+  }
+
+  if (args.includes('--jira')) {
+    const config = jiraConfigFromEnv(args.includes('--dry-run'));
+    if (!config) {
+      console.error('--jira requires JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN and JIRA_PROJECT_KEY.');
+      return 1;
+    }
+    const outcome = await syncJiraIssues(config, result.reports, result.stats.runId, preUpdateResolved);
+    console.log(
+      `Jira: ${outcome.created.length} issue(s) created, ${outcome.commented.length} commented, ` +
         `${outcome.closeProposed.length} close proposal(s), ${outcome.skipped.length} skipped (flaky/infra).`,
     );
   }

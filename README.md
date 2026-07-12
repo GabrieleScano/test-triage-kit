@@ -28,7 +28,7 @@ ingest → classify → fingerprint/cluster → history → verdict → (AI enri
 | History | Append-only run history → flaky detection ("failed 2 of 10 runs, never twice in a row") | ✅ |
 | Verdict | `likely-bug` / `likely-flaky` / `infrastructure` — with stated reasons | ✅ |
 | AI enrichment | Human-readable title, root-cause hypothesis, severity proposal, natural-language repro steps; plus a cross-run synthesis ("12 failures, one systemic cause") | ➕ additive |
-| Outputs | Markdown reports, static HTML triage page, GitHub Issues lifecycle, Slack digest | ✅ |
+| Outputs | Markdown reports, static HTML triage page, GitHub Issues / Jira lifecycle, Slack digest | ✅ |
 
 The rule engine is the source of truth; the AI layer (Anthropic Messages API with structured outputs) is best-effort — a network error never breaks triage, and its output is schema-validated before anything downstream uses it.
 
@@ -56,7 +56,7 @@ reporter: [
 ],
 ```
 
-Options: `--no-ai`, `--github` (+ `--dry-run`), `--slack`, `--help`.
+Options: `--no-ai`, `--github` (+ `--dry-run`), `--jira` (+ `--dry-run`), `--slack`, `--help`.
 
 ## GitHub Issues lifecycle
 
@@ -66,6 +66,14 @@ With `--github` (needs `GITHUB_TOKEN` + `GITHUB_REPOSITORY`, both present in Git
 - **Known fingerprint** → comments the new occurrence on the existing issue. No duplicates, ever.
 - **Fingerprint green for 5 runs** → comments a close proposal. It never closes issues on its own — that judgement stays human.
 - **Flaky / infrastructure verdicts** → deliberately skipped. Filing them as bugs is exactly the noise this tool exists to prevent.
+
+## Jira lifecycle
+
+Same contract, ported to Jira Cloud. With `--jira` (needs `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN`, `JIRA_PROJECT_KEY`):
+
+- Issues are created via the Jira REST API v3, with the description built as **Atlassian Document Format** (not Markdown) — headings, bullet/ordered lists and a code block for the error, plus the fingerprint marker as its own paragraph.
+- Open issues labeled `automated-triage` are matched by walking their ADF description for that marker, so the dedupe/comment/close-proposal lifecycle is identical to the GitHub one.
+- Runs against the **free tier of Jira Cloud** — no paid plan required to try it end to end.
 
 ## AI layer
 
