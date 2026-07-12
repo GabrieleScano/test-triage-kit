@@ -50,11 +50,13 @@ jobs:
       - run: npm run build
       - run: npm run demo
       - run: npm run demo:enriched
+      - run: npm run demo:jira
       - name: Stage Pages site
         run: |
           mkdir -p site/deterministic
           cp triage-output-enriched/triage.html site/index.html
           cp triage-output-enriched/*.md site/
+          cp triage-output-enriched/jira-preview.html site/jira-preview.html
           cp triage-output/triage.html site/deterministic/index.html
           cp triage-output/*.md site/deterministic/
       - uses: actions/configure-pages@v5

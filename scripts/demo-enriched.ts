@@ -60,7 +60,8 @@ async function main(): Promise<void> {
 
   const banner =
     `<p class="meta">${NOTE} ` +
-    '<a href="deterministic/">See the deterministic-only output</a> — what the pipeline produces with AI disabled.</p>';
+    '<a href="deterministic/">See the deterministic-only output</a> — what the pipeline produces with AI disabled. ' +
+    '<a href="jira-preview.html">See the Jira preview</a> — the same reports as they\'d appear synced to Jira.</p>';
   writeFileSync(join(outDir, 'triage.html'), triageHtml(result).replace('</h1>', '</h1>\n' + banner));
 
   console.log(`Enriched demo written to ${outDir}/ (${result.reports.length} recorded cluster report(s)).`);

@@ -17,6 +17,7 @@
     "start": "tsx src/cli.ts",
     "demo": "tsx src/cli.ts fixtures/sample-report.json --out triage-output --history triage-output/history.json",
     "demo:enriched": "tsx scripts/demo-enriched.ts",
+    "demo:jira": "tsx scripts/demo-jira.ts",
     "test": "node --import tsx --test tests/*.test.ts"
   },
   "keywords": [

@@ -4,7 +4,7 @@ Failure-triage toolkit for **Playwright**: it turns raw test failures into dedup
 
 [![CI](https://github.com/GabrieleScano/test-triage-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/GabrieleScano/test-triage-kit/actions/workflows/ci.yml)
 
-**[See a live triage report →](https://gabrielescano.github.io/test-triage-kit/)** — the pipeline run on the bundled fixture: clustered bugs, a flaky test, stated verdicts, and the AI-written bug reports (human title, root-cause hypothesis, severity, repro steps). The model responses are [recorded](fixtures/recorded-ai.json) and validated by the real parser, so CI rebuilds the page deterministically without an API key; the [deterministic-only output](https://gabrielescano.github.io/test-triage-kit/deterministic/) is published alongside for comparison.
+**[See a live triage report →](https://gabrielescano.github.io/test-triage-kit/)** — the pipeline run on the bundled fixture: clustered bugs, a flaky test, stated verdicts, and the AI-written bug reports (human title, root-cause hypothesis, severity, repro steps). The model responses are [recorded](fixtures/recorded-ai.json) and validated by the real parser, so CI rebuilds the page deterministically without an API key; the [deterministic-only output](https://gabrielescano.github.io/test-triage-kit/deterministic/) is published alongside for comparison, along with a [**Jira preview**](https://gabrielescano.github.io/test-triage-kit/jira-preview.html) — the same reports rendered from the real ADF payload the `--jira` sync would send (Jira Cloud's free tier has no public anonymous issue view, so this static render stands in for a live link).
 
 ## Why this project
 
@@ -74,6 +74,7 @@ Same contract, ported to Jira Cloud. With `--jira` (needs `JIRA_BASE_URL`, `JIRA
 - Issues are created via the Jira REST API v3, with the description built as **Atlassian Document Format** (not Markdown) — headings, bullet/ordered lists and a code block for the error, plus the fingerprint marker as its own paragraph.
 - Open issues labeled `automated-triage` are matched by walking their ADF description for that marker, so the dedupe/comment/close-proposal lifecycle is identical to the GitHub one.
 - Runs against the **free tier of Jira Cloud** — no paid plan required to try it end to end.
+- Since that free tier has no public anonymous issue view, the [**live Jira preview**](https://gabrielescano.github.io/test-triage-kit/jira-preview.html) renders the real ADF payload as issue cards instead of linking a real (private) issue.
 
 ## AI layer
 
