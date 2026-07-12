@@ -8,10 +8,16 @@ import { clusterAdf } from './jira.js';
  * Jira issue cards, so the lifecycle is demonstrable without a live Jira
  * site — the free tier doesn't support public anonymous issue viewing.
  */
-export function jiraPreviewHtml(result: TriageResult, issueKeyPrefix: string): string {
+export function jiraPreviewHtml(
+  result: TriageResult,
+  issueKeyPrefix: string,
+  illustrations: Record<string, string> = {},
+): string {
   const bugs = result.reports.filter((r) => r.verdict.type === 'likely-bug');
   const cards = bugs
-    .map((report, i) => issueCard(report, `${issueKeyPrefix}-${i + 1}`, result.stats.runId))
+    .map((report, i) =>
+      issueCard(report, `${issueKeyPrefix}-${i + 1}`, result.stats.runId, illustrations[report.cluster.fingerprint]),
+    )
     .join('\n');
 
   return `<!DOCTYPE html>
@@ -31,6 +37,9 @@ export function jiraPreviewHtml(result: TriageResult, issueKeyPrefix: string): s
   .type-badge { display: inline-flex; align-items: center; gap: .3rem; background: #de350b22; color: #de350b; border-radius: 4px; padding: .1rem .5rem; font-size: .78rem; font-weight: 600; }
   .label { display: inline-block; background: #8882; border-radius: 3px; padding: .05rem .5rem; font-size: .75rem; margin-right: .3rem; }
   .issue h2 { margin: .3rem 0 .6rem; font-size: 1.1rem; }
+  .attachment { margin: .8rem 0; }
+  .attachment svg { display: block; width: 100%; height: auto; border: 1px solid #8884; border-radius: 6px; color: #6b6b6b; }
+  .attachment figcaption { font-size: .78rem; color: #888; margin-top: .3rem; }
   ul, ol { padding-left: 1.4rem; font-size: .9rem; }
   ul b { color: #6b6b6b; font-weight: 600; }
   h3 { font-size: .95rem; margin: .9rem 0 .3rem; }
@@ -48,7 +57,7 @@ ${cards || '<p>No likely-bug verdicts in this run.</p>'}
 `;
 }
 
-function issueCard(report: ClusterReport, issueKey: string, runId: string): string {
+function issueCard(report: ClusterReport, issueKey: string, runId: string, illustration?: string): string {
   const title = report.ai?.title ?? report.cluster.representative.testId;
   const doc = clusterAdf(report, runId);
   return `<div class="issue">
@@ -58,8 +67,16 @@ function issueCard(report: ClusterReport, issueKey: string, runId: string): stri
     <span class="label">automated-triage</span>
   </div>
   <h2>${escapeHtml(title)}</h2>
+  ${illustration ? attachmentFigure(illustration) : ''}
   ${adfToHtml(doc)}
 </div>`;
+}
+
+function attachmentFigure(svg: string): string {
+  return `<figure class="attachment">
+    ${svg}
+    <figcaption>Illustrative reproduction, not a captured screenshot — the demo fixture is synthetic.</figcaption>
+  </figure>`;
 }
 
 export function adfToHtml(doc: AdfDoc): string {

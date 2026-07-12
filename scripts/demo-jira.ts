@@ -5,6 +5,7 @@ import { loadHistory } from '../src/history/store.js';
 import { runTriage } from '../src/pipeline.js';
 import { parseEnrichment, parseSynthesis } from '../src/ai/enrich.js';
 import { jiraPreviewHtml } from '../src/output/jira-html.js';
+import { illustrationFor } from './demo-illustrations.js';
 
 /**
  * Builds a static preview of the Jira sync output, same recorded-fixture
@@ -42,8 +43,15 @@ async function main(): Promise<void> {
   }
   result.synthesis = parseSynthesis(JSON.stringify(recorded.synthesis));
 
+  const illustrations = Object.fromEntries(
+    result.reports.flatMap((report) => {
+      const svg = illustrationFor(report);
+      return svg ? [[report.cluster.fingerprint, svg]] : [];
+    }),
+  );
+
   mkdirSync(outDir, { recursive: true });
-  writeFileSync(join(outDir, 'jira-preview.html'), jiraPreviewHtml(result, 'QA'));
+  writeFileSync(join(outDir, 'jira-preview.html'), jiraPreviewHtml(result, 'QA', illustrations));
 
   const bugCount = result.reports.filter((r) => r.verdict.type === 'likely-bug').length;
   console.log(`Jira preview written to ${outDir}/jira-preview.html (${bugCount} issue card(s)).`);

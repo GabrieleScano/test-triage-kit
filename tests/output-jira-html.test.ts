@@ -80,3 +80,22 @@ test('jiraPreviewHtml handles a run with no likely-bug verdicts', () => {
   };
   assert.match(jiraPreviewHtml(result, 'QA'), /No likely-bug verdicts/);
 });
+
+test('jiraPreviewHtml embeds an illustration when one is provided for the fingerprint, with its caption', () => {
+  const result: TriageResult = {
+    stats: { runId: 'run-3', startedAt: '', total: 1, passed: 0, failed: 1, flaky: 0, skipped: 0 },
+    reports: [report()],
+  };
+  const html = jiraPreviewHtml(result, 'QA', { abc123: '<svg><rect/></svg>' });
+  assert.match(html, /<svg><rect\/><\/svg>/);
+  assert.match(html, /not a captured screenshot/);
+});
+
+test('jiraPreviewHtml renders no illustration when none is provided for the fingerprint', () => {
+  const result: TriageResult = {
+    stats: { runId: 'run-4', startedAt: '', total: 1, passed: 0, failed: 1, flaky: 0, skipped: 0 },
+    reports: [report()],
+  };
+  const html = jiraPreviewHtml(result, 'QA', { 'some-other-fingerprint': '<svg></svg>' });
+  assert.doesNotMatch(html, /class="attachment"/);
+});
